@@ -3,3 +3,4 @@ uvicorn==0.17.6
 pytest==7.1.2
 junit-xml==1.9
 coverage==6.3.2
+python-dotenv==0.20.0
