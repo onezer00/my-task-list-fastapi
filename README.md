@@ -56,5 +56,6 @@ At the moment the code has 100% test coverage.
 | Version | Date | Description |
 --- | --- | ---
 1.0.1 | 2022-04-30 | Change the project to Fast API, to better meet the project proposal and have an online service. |
+1.0.2 | 2022-04-30 | Creating dynamic variables and updating the initial functions to return the project version.
 # my-task-list-fastapi
 This project is part of my personal portfolio, and you are invited to contribute.
