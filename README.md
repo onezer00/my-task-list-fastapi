@@ -45,7 +45,7 @@ At the moment the code has 100% test coverage.
 - ``BASE_URL: http://127.0.0.1:5000/`` - The Project is not online yet, it runs locally at this local address.
 
 ### URI's
-- ``{BASE_URL}/docs`` - A documentation with all the URI's can be found in this URI.
+- ``Swagger`` - A documentation with all the URI's can be found in this [LINK](https://9jak84.deta.dev/docs).
 
 # NEXT STEPS
 - [ ] ``Think about how to store, edit and retrieve data.``

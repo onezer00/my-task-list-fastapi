@@ -132,3 +132,7 @@ dmypy.json
 *.xml
 *.html
 .vercel
+
+# Deployment
+deploy.sh
+.deta/
