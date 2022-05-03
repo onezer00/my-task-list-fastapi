@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
@@ -23,11 +24,12 @@ app = FastAPI(**configuration)
 class Task(BaseModel):
     task_name: str
     task_description: str
-    task_created: str
+    task_created: str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     
 class TaskUpdate(BaseModel):
     task_name: str = None
     task_description: str = None
+    task_updated: str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
 @app.get("/")
 async def read_root():
@@ -64,7 +66,6 @@ def read_root():
 
 @app.post("/tasks")
 def create_task(task: Task):
-    task['task_created'] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     task_db.put(task.dict())
     return task_db.fetch()
 
@@ -83,7 +84,6 @@ def get_user(uid: str):
 
 @app.patch("/tasks/{uid}")
 def update_user(uid: str, uu: TaskUpdate):
-    uid['task_created'] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     updates = {k:v for k,v in uu.dict().items() if v is not None}
     try:
         task_db.update(updates, uid)
