@@ -31,6 +31,7 @@ configuration = {
     "description":'A simple task list with fastapi',
     "python_requires":">:3.5",
     "last_updated": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    "SQLALCHEMY_DATABASE_URI": "sqlite:///./task_app.db",
 }
 
 app = FastAPI(**configuration)
