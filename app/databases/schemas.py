@@ -18,7 +18,6 @@ class Task(TaskBase):
     task_description: str
     class Config:
         orm_mode = True
-        
+
 class TaskUpdate(TaskBase):
-    task_name: Optional[str] = None
-    task_description: Optional[str] = None
+    pass

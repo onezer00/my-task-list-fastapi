@@ -74,18 +74,46 @@ async def read_item():
     return {"AppVersion": app.version, "LastUpdated": app.extra["last_updated"]}
 
 @app.get("/tasks", response_model=list[schemas.Task])
-async def read_tasks(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    tasks = crud.get_tasks(db, skip=skip, limit=limit)
-    return tasks
+def read_tasks(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    try:
+        response = crud.get_tasks(db, skip=skip, limit=limit)
+    except:
+        raise HTTPException(status_code=400, detail="Could not get tasks")
+    return response
 
 @app.post('/tasks', response_model=schemas.Task)
-async def create_task(task: schemas.TaskCreate, db: Session = Depends(get_db)):
-    return crud.create_task(db=db, task=task)
+def create_task(task: schemas.TaskCreate, db: Session = Depends(get_db)):
+    try:
+        created_task = crud.create_task(db=db, task=task)
+    except:
+        raise HTTPException(status_code=400, detail="Failed to create task")
+    
+    response = {
+        "detail": "The task has been edited",
+        "id": created_task.id,
+        "task_name": created_task.task_name,
+        "task_description": created_task.task_description,
+    }
+    
+    return response
 
 @app.delete('/tasks/{task_id}')
-async def delete_task(task_id: int, db: Session = Depends(get_db)):
-    return crud.delete_task(db=db, task_id=task_id)
+def delete_task(task_id: int, db: Session = Depends(get_db)):
+    try:
+        delete_task = crud.delete_task(db=db, task_id=task_id)
+    except:
+        raise HTTPException(status_code=400, detail="Failed to delete task")
+    return delete_task
 
 @app.put('/tasks/{task_id}', response_model=schemas.TaskUpdate)
-async def edit_task(task_id: int, task: schemas.TaskUpdate, db: Session = Depends(get_db)):
-    return crud.edit_task(db=db, task_id=task_id, task=task)
+def edit_task(task_id: int, task: schemas.TaskUpdate, db: Session = Depends(get_db)):
+    try:
+        edited_task = crud.edit_task(db=db, task_id=task_id, task=task)
+    except:
+        raise HTTPException(status_code=404, detail="Task not found")
+    response = {
+        "detail": "The task has been edited",
+        "task_name": edited_task.task_name,
+        "task_description": edited_task.task_description,
+    }
+    return response

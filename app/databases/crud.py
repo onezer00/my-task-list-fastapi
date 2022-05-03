@@ -37,5 +37,5 @@ def edit_task(db: Session, task_id: int, task: schemas.TaskUpdate):
         if task.task_description is not None:
             db_task.task_description = task.task_description
         db.commit()
-        return db_task
+        return task
     return None
