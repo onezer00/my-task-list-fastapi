@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, DateTime
 
-from .database import Base
+from .database import deta_key
 
-class Task(Base):
-    __tablename__ = "task_list"
+class Task(deta_key):
+    __tablename__ = "tasks_db"
 
     id = Column(Integer, primary_key=True, index=True)
     task_name = Column(String, index=True)
