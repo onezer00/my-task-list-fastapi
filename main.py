@@ -1,8 +1,8 @@
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
-from app.databases import models, schemas, crud
-from app.databases.database import SessionLocal, engine
+from app.databases import schemas, crud
+from app.databases.database import deta_key
 
 from app.task_list import TaskList
 
@@ -22,7 +22,6 @@ get_current_config()
 from os import getenv
 
 load_envs.load()
-models.Base.metadata.create_all(bind=engine)
 
 configuration = {
     "title":"Python Task List",
@@ -31,7 +30,7 @@ configuration = {
     "description":'A simple task list with fastapi',
     "python_requires":">:3.5",
     "last_updated": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    "SQLALCHEMY_DATABASE_URI": "sqlite:///./task_app.db",
+    "SQLALCHEMY_DATABASE_URI": "postgresql://sql10489830:mfpJPYJ71Y@sql10489830:3306/task_app",
 }
 
 app = FastAPI(**configuration)
@@ -39,7 +38,7 @@ TaskList = TaskList()
 
 
 def get_db():
-    db = SessionLocal()
+    db = deta_key('tasks_db')
     try:
         yield db
     finally:
@@ -76,11 +75,7 @@ async def read_item():
 
 @app.get("/tasks", response_model=list[schemas.Task])
 def read_tasks(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    try:
-        response = crud.get_tasks(db, skip=skip, limit=limit)
-    except:
-        raise HTTPException(status_code=400, detail="Could not get tasks")
-    return response
+    return db.get()
 
 @app.post('/tasks', response_model=schemas.Task)
 def create_task(task: schemas.TaskCreate, db: Session = Depends(get_db)):

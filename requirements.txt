@@ -5,3 +5,4 @@ junit-xml==1.9
 coverage==6.3.2
 python-dotenv==0.20.0
 sqlalchemy==1.4.36
+deta==1.1.0
