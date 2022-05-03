@@ -134,6 +134,5 @@ dmypy.json
 .vercel
 
 # Deployment
-*.db
 deploy.sh
 .deta/
