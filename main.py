@@ -67,11 +67,12 @@ def read_root():
 @app.post("/tasks")
 def create_task(task: Task):
     task_db.put(task.dict())
-    return task_db.fetch().last()
+    tasks = task_db.fetch()
+    return tasks.last
 
 @app.get("/tasks")
-def list_users(limit: int = 100):
-    tasks = task_db.fetch(limit=limit)
+def list_users():
+    tasks = task_db.fetch()
     return tasks.items
 
 @app.get("/tasks/{uid}")
