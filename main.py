@@ -71,7 +71,7 @@ async def read_item():
     '''    
     return {"AppVersion": app.version, "LastUpdated": app.extra["last_updated"]}
 
-@app.post('tasks')
+@app.post('/task')
 def create_task(task: Task):
     task = task.put(task.dict())
     return task
