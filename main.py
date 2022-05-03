@@ -66,9 +66,8 @@ def read_root():
 
 @app.post("/tasks")
 def create_task(task: Task):
-    task_db.put(task.dict())
-    tasks = task_db.fetch()
-    return tasks.last()
+    task = task_db.put(task.dict())
+    return task
 
 @app.get("/tasks")
 def list_users():
