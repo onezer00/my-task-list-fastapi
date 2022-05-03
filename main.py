@@ -22,6 +22,7 @@ get_current_config()
 from os import getenv
 
 load_envs.load()
+models.Base.metadata.create_all(bind=engine)
 
 configuration = {
     "title":"Python Task List",
@@ -35,7 +36,6 @@ configuration = {
 app = FastAPI(**configuration)
 TaskList = TaskList()
 
-models.Base.metadata.create_all(bind=engine)
 
 def get_db():
     db = SessionLocal()
