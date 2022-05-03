@@ -1,10 +1,8 @@
-from fastapi import Depends, FastAPI, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
+from pydantic import BaseModel
+from deta import Deta
 
-from app.databases import schemas, crud
-from app.databases.database import deta_key
-
-from app.task_list import TaskList
+from datetime import datetime
 
 import datetime
 import load_envs
@@ -33,16 +31,16 @@ configuration = {
     "SQLALCHEMY_DATABASE_URI": "postgresql://sql10489830:mfpJPYJ71Y@sql10489830:3306/task_app",
 }
 
+db = Deta()
+
+tasks = db.Base('tasks_db')
+
 app = FastAPI(**configuration)
-TaskList = TaskList()
 
-
-def get_db():
-    db = deta_key('tasks_db')
-    try:
-        yield db
-    finally:
-        db.close()
+class Task(BaseModel):
+    task_name: str
+    task_description: str
+    task_creation: datetime
 
 @app.get("/")
 async def read_root():
@@ -73,43 +71,7 @@ async def read_item():
     '''    
     return {"AppVersion": app.version, "LastUpdated": app.extra["last_updated"]}
 
-@app.get("/tasks", response_model=list[schemas.Task])
-def read_tasks(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return db.get()
-
-@app.post('/tasks', response_model=schemas.Task)
-def create_task(task: schemas.TaskCreate, db: Session = Depends(get_db)):
-    try:
-        created_task = crud.create_task(db=db, task=task)
-    except:
-        raise HTTPException(status_code=400, detail="Failed to create task")
-    
-    response = {
-        "detail": "The task has been edited",
-        "id": created_task.id,
-        "task_name": created_task.task_name,
-        "task_description": created_task.task_description,
-    }
-    
-    return response
-
-@app.delete('/tasks/{task_id}')
-def delete_task(task_id: int, db: Session = Depends(get_db)):
-    try:
-        delete_task = crud.delete_task(db=db, task_id=task_id)
-    except:
-        raise HTTPException(status_code=400, detail="Failed to delete task")
-    return delete_task
-
-@app.put('/tasks/{task_id}', response_model=schemas.TaskUpdate)
-def edit_task(task_id: int, task: schemas.TaskUpdate, db: Session = Depends(get_db)):
-    try:
-        edited_task = crud.edit_task(db=db, task_id=task_id, task=task)
-    except:
-        raise HTTPException(status_code=404, detail="Task not found")
-    response = {
-        "detail": "The task has been edited",
-        "task_name": edited_task.task_name,
-        "task_description": edited_task.task_description,
-    }
-    return response
+@app.post('tasks')
+def create_task(task: Task):
+    task.put(task.dict())
+    return next(task.fetch())
