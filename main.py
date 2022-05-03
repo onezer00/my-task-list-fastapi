@@ -73,5 +73,5 @@ async def read_item():
 
 @app.post('tasks')
 def create_task(task: Task):
-    task.put(task.dict())
-    return next(task.fetch())
+    task = task.put(task.dict())
+    return task
