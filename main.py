@@ -70,12 +70,12 @@ def create_task(task: Task):
     return task
 
 @app.get("/tasks")
-def list_users():
+def list_tasks():
     tasks = task_db.fetch()
     return tasks.items
 
 @app.get("/tasks/{uid}")
-def get_user(uid: str):
+def get_task(uid: str):
     task = task_db.get(uid)
     if task:
         return task
@@ -83,16 +83,16 @@ def get_user(uid: str):
 
 
 @app.patch("/tasks/{uid}")
-def update_user(uid: str, uu: TaskUpdate):
+def update_task(uid: str, uu: TaskUpdate):
     updates = {k:v for k,v in uu.dict().items() if v is not None}
     try:
         task_db.update(updates, uid)
         return task_db.get(uid)
     except Exception:
-        return JSONResponse({"message": "user not found"}, status_code=404)
+        return JSONResponse({"message": "Task not found"}, status_code=404)
 
 
 @app.delete("/tasks/{uid}")
-def delete_user(uid: str):
+def delete_task(uid: str):
     task_db.delete(uid)
-    return
+    return JSONResponse({"message": f"Task {uid} deleted"})
