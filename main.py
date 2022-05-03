@@ -40,7 +40,7 @@ app = FastAPI(**configuration)
 class Task(BaseModel):
     task_name: str
     task_description: str
-    task_creation: datetime
+    task_creation: str
 
 @app.get("/")
 async def read_root():
