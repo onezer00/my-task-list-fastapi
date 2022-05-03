@@ -18,7 +18,7 @@ configuration = {
     "last_updated": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
 }
 
-app = FastAPI()
+app = FastAPI(**configuration)
 
 class Task(BaseModel):
     task_name: str
