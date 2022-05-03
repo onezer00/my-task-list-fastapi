@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.responses import JSONResponse
 from deta import Deta
-
-from datetime import datetime
 
 import datetime
 import load_envs
@@ -31,9 +30,9 @@ configuration = {
     "SQLALCHEMY_DATABASE_URI": "postgresql://sql10489830:mfpJPYJ71Y@sql10489830:3306/task_app",
 }
 
-db = Deta()
+deta = Deta()
 
-tasks = db.Base('tasks_db')
+tasks = deta.Base('task-db')
 
 app = FastAPI(**configuration)
 
@@ -71,7 +70,12 @@ async def read_item():
     '''    
     return {"AppVersion": app.version, "LastUpdated": app.extra["last_updated"]}
 
-@app.post('/task')
-def create_task(task: Task):
-    task = task.put(task.dict())
+@app.post("/tasks", status_code=201)
+def create_user(task: Task):
+    task = tasks.put(task.dict())
     return task
+
+@app.get("/tasks")
+def list_users():
+    us = next(tasks.fetch())
+    return us
