@@ -24,12 +24,12 @@ app = FastAPI(**configuration)
 class Task(BaseModel):
     task_name: str
     task_description: str
-    task_created: Optional[str] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    task_created: Optional[str] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     
 class TaskUpdate(BaseModel):
     task_name: str = None
     task_description: str = None
-    task_updated: Optional[str] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    task_updated: Optional[str] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
 @app.get("/")
 async def read_root():
